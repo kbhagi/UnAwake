@@ -9,22 +9,22 @@ namespace UnAwake
 {
 static  class Program
     {
-        public static List<string> ArmedDevices { get; } = GetArmedDevices().ToList();
-        public static List<string> Devices { get; } = GetDevices().ToList();
+        public static List<string> ArmedDevices { get; } = GetArmedDevices().ToList();//List to store all devices that have been checked as "enable wake up from sleep" in their device manager settings menu.
+        public static List<string> Devices { get; } = GetDevices().ToList();//List to store all devices that can wake up your pc from sleep 
 
         static void Main(string[] args)
         {
-            Console.WriteAscii("Devices", Color.DeepSkyBlue);
+            Console.WriteAscii("Devices", Color.DeepSkyBlue);//using Color.console library
             Console.WriteLine("Management v1.0\n", Color.YellowGreen);
 
-            var response = AskQuestion("Do you wish to (e)nable or (d)isabled devices ?", new List<string> { "e", "d" });
+            var response = AskQuestion("Do you wish to (e)nable or (d)isable devices ?", new List<string> { "e", "d" });//List to hold the responses from user as e or d
             if (response == "e")
-                EnableDevices();
+                EnableDevices();//Call method EnableDevices
             else
-                DisableDevices();
+                DisableDevices();// call method DisableDevices
 
             Console.WriteLine("Press any key to close this window.");
-            Console.ReadKey();
+            Console.ReadKey();//Wait for user input then close the console.
        }
         static string AskQuestion(string question, List<string> possibleinputs)
         {
@@ -90,7 +90,7 @@ private static void WaitForYes()
             Console.WriteLine("> Are you sure that you want to disable the following devices ?\n");
             foreach(var disabledevice in disabledevices)
             {
-                Console.WriteLine($": {disabledevice}", Color.Crimson);
+                Console.WriteLine($": {disabledevice}", Color.OrangeRed);
             }
             WaitForYes();
             DisableDevices(disabledevices);
@@ -99,7 +99,7 @@ private static void WaitForYes()
         private static IEnumerable<string> ToDeviceName(this IEnumerable<string> list) => list.Select(item => Devices[Convert.ToInt32(item)]);
         private static IEnumerable<string> GetDevices()
         {
-            var proc = new Process
+            var proc = new Process  //Starts a shell process and issues a command to find devices that can be enabled to wake up your pc from sleep 
             {
                 StartInfo =
                 {
@@ -116,7 +116,7 @@ private static void WaitForYes()
         }
         private static IEnumerable<string> GetArmedDevices()
         {
-            var proc = new Process
+            var proc = new Process //Starts a shell process and issues a command to find devices that are enabled to wake up your pc from sleep 
             {
                 StartInfo =
                 {
@@ -143,7 +143,7 @@ private static void WaitForYes()
                 {
                     UseShellExecute=false,
             RedirectStandardOutput = false,
-            FileName = "powercfg",
+            FileName = "powercfg",                         //Starts a shell process and issues a command to disable devices that are enabled to wake up your pc from sleep 
             Arguments=$"/devicedisablewake \"{device}\""
 
                 }
@@ -164,7 +164,7 @@ private static void WaitForYes()
                     UseShellExecute=false,
                     RedirectStandardOutput=true,
                     FileName="powercfg",
-                    Arguments=$"/deviceenablewake \"{device}\""
+                    Arguments=$"/deviceenablewake \"{device}\"" //Starts a shell process and issues a command to enable devices that have an option to wake up your pc from sleep 
                 }
             };
             proc.Start();
